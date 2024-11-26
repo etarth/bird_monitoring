@@ -4,6 +4,7 @@ import { ref, onValue } from 'firebase/database';
 import SideMenu from './components/SideMenu';
 import BirdStatus from './components/BirdStatus';
 import CameraStream from './components/CameraStream';
+import BirdHistory from './components/BirdHistory';
 
 const App = () => {
   const [sensorData, setSensorData] = useState(null);
@@ -129,6 +130,9 @@ const App = () => {
           ) : (
             <p className="text-center text-gray-500">Loading sensor data...</p>
           )}
+          <div className="h-[85vh] w-full snap-center" ref={eatingHistoryRef}>
+            <BirdHistory />
+          </div>
         </div>
       </div>
     </div>
