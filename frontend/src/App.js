@@ -13,7 +13,7 @@ const App = () => {
 
   const liveStreamRef = useRef(null);
   const pettingRef = useRef(null);
-  const eatingHistoryRef = useRef(null);
+  const birdHistoryRef = useRef(null);
   const changeNameRef = useRef(null);
 
   // Firebase data fetching
@@ -42,8 +42,8 @@ const App = () => {
       case 'feeding':
         pettingRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
-      case 'eatingHistory':
-        eatingHistoryRef.current?.scrollIntoView({ behavior: 'smooth' });
+      case 'birdHistory':
+        birdHistoryRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
       case 'changeName':
         changeNameRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -67,7 +67,7 @@ const App = () => {
     const sections = [
       { id: 'liveStream', ref: liveStreamRef },
       { id: 'feeding', ref: pettingRef },
-      { id: 'eatingHistory', ref: eatingHistoryRef },
+      { id: 'birdHistory', ref: birdHistoryRef },
       { id: 'changeName', ref: changeNameRef },
     ];
 
@@ -119,7 +119,7 @@ const App = () => {
         }
       >
         <SideMenu selectedSection={selectedSection} onSelectSection={handleSectionSelect} />
-        <div className="flex-col space-y-[24px] h-[85vh] w-full rounded-[24px] overflow-y-auto snap-mandatory snap-y">
+        <div className="flex-col space-y-[24px] h-[85vh] w-full rounded-[36px] overflow-y-auto snap-mandatory snap-y">
           <div className="h-[85vh] w-full snap-center" ref={liveStreamRef}>
             <CameraStream />
           </div>
@@ -130,7 +130,7 @@ const App = () => {
           ) : (
             <p className="text-center text-gray-500">Loading sensor data...</p>
           )}
-          <div className="h-[85vh] w-full snap-center" ref={eatingHistoryRef}>
+          <div className="h-[85vh] w-full snap-center" ref={birdHistoryRef}>
             <BirdHistory />
           </div>
         </div>
