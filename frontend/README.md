@@ -33,7 +33,6 @@ Make sure you have the following installed on your machine:
     # Firebase Configuration
     REACT_APP_API_KEY=your-api-key
     REACT_APP_AUTH_DOMAIN=your-auth-domain
-    REACT_APP_DATABASE_URL=your-database-url
     REACT_APP_PROJECT_ID=your-project-id
     REACT_APP_STORAGE_BUCKET=your-storage-bucket
     REACT_APP_MESSAGING_SENDER_ID=your-messaging-sender-id

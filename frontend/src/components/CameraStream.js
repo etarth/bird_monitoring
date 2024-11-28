@@ -1,8 +1,7 @@
 import React from 'react';
 
 const CameraStream = () => {
-  // Replace the src URL with your ESP32-CAM IP address
-  const streamURL = 'http://172.20.10.3/sustain?video=1/';
+  const streamURL = process.env.REACT_APP_CAMERA_STREAM_URL;
 
   return (
     <div className="relative bg-white w-full h-full rounded-[36px] overflow-hidden">

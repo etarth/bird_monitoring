@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import FoodTab from './FoodTab';
 import WaterTab from './WaterTab';
-import BirdHistoryTable from './BirdHistoryTable'; // Import the new component
+import BirdHistoryTable from './BirdHistoryTable';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const BirdHistory = () => {
   const [birdHistory, setBirdHistory] = useState([]);
@@ -9,14 +12,19 @@ const BirdHistory = () => {
   const [activeTab, setActiveTab] = useState('food');
 
   useEffect(() => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    fetch(`${backendUrl}/api/bird-history`)
-      .then((response) => response.json())
-      .then((data) => {
-        const records = data.sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort by time (earliest to latest)
+    const fetchBirdHistory = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/bird-history`);
+        const data = await response.json();
+        const records = data.sort((a, b) => new Date(a.time) - new Date(b.time));
         setBirdHistory(records);
         setVideoUrl(records[records.length - 1]?.video || '');
-      });
+      } catch (error) {
+        console.error('Error fetching bird history:', error);
+      }
+    };
+    fetchBirdHistory();
   }, []);
 
   const foodGraphData = {
@@ -49,12 +57,12 @@ const BirdHistory = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: false, // Hides the legend
+        display: false,
       },
       tooltip: {
         callbacks: {
           title: (tooltipItems) => {
-            return tooltipItems[0]?.label; // Show time from `record.time` in the tooltip
+            return tooltipItems[0]?.label;
           },
         },
       },
@@ -67,11 +75,11 @@ const BirdHistory = () => {
       },
       y: {
         ticks: {
-          display: true, 
+          display: true,
         },
       },
     },
-  }
+  };
 
   return (
     <div className="flex flex-col bg-white h-full w-full rounded-[36px] p-6">
@@ -79,16 +87,10 @@ const BirdHistory = () => {
 
       <div className="mb-10 h-[30%]">
         <div className="flex space-x-4 mb-4">
-          <button
-            onClick={() => setActiveTab('food')}
-            className={`py-2 px-4 rounded-lg ${activeTab === 'food' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}
-          >
+          <button onClick={() => setActiveTab('food')} className={`py-2 px-4 rounded-lg ${activeTab === 'food' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}>
             Food
           </button>
-          <button
-            onClick={() => setActiveTab('water')}
-            className={`py-2 px-4 rounded-lg ${activeTab === 'water' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}
-          >
+          <button onClick={() => setActiveTab('water')} className={`py-2 px-4 rounded-lg ${activeTab === 'water' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}>
             Water
           </button>
         </div>
@@ -96,8 +98,7 @@ const BirdHistory = () => {
         {activeTab === 'water' && <WaterTab birdHistory={birdHistory} waterGraphData={waterGraphData} chartOptions={chartOptions} />}
       </div>
 
-      <BirdHistoryTable birdHistory={birdHistory}/>
-
+      <BirdHistoryTable birdHistory={birdHistory} />
     </div>
   );
 };
