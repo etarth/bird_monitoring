@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { database } from '../firebaseConfig';
-import { ref, onValue } from 'firebase/database';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import FoodTab from './FoodTab';
 import WaterTab from './WaterTab';
 import BirdHistoryTable from './BirdHistoryTable'; // Import the new component
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const BirdHistory = () => {
   const [birdHistory, setBirdHistory] = useState([]);
@@ -22,22 +9,15 @@ const BirdHistory = () => {
   const [activeTab, setActiveTab] = useState('food');
 
   useEffect(() => {
-    const birdHistoryRef = ref(database, '/birdHistory');
-  
-    onValue(birdHistoryRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const records = Object.entries(data)
-          .map(([key, value]) => ({
-            id: key,
-            ...value,
-          }))
-          .sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort by time (earliest to latest)
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    fetch(`${backendUrl}/api/bird-history`)
+      .then((response) => response.json())
+      .then((data) => {
+        const records = data.sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort by time (earliest to latest)
         setBirdHistory(records);
         setVideoUrl(records[records.length - 1]?.video || '');
-      }
-    });
-  }, []);  
+      });
+  }, []);
 
   const foodGraphData = {
     labels: birdHistory.map((record) => record.time),

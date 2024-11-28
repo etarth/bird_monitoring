@@ -28,19 +28,24 @@ Make sure you have the following installed on your machine:
 3. Create a .env file in the root of the backend directory and add the following environment variables:
 
 ```
-   TYPE=service_account
-   PROJECT_ID=your-project-id
-   PRIVATE_KEY_ID=your-private-key-id
-   PRIVATE_KEY="your-private-key"
-   CLIENT_EMAIL=your-client-email
-   CLIENT_ID=your-client-id
-   AUTH_URI=https://accounts.google.com/o/oauth2/auth
-   TOKEN_URI=https://oauth2.googleapis.com/token
-   AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
-   CLIENT_X509_CERT_URL=your-client-x509-cert-url
-   UNIVERSE_DOMAIN=googleapis.com
-   DATABASE_URL=your-database-url
-   PORT=3001
+    # Firebase Service Account Configuration
+    TYPE=service_account
+    PROJECT_ID=your-project-id
+    PRIVATE_KEY_ID=your-private-key-id
+    PRIVATE_KEY="your-private-key"
+    CLIENT_EMAIL=your-client-email
+    CLIENT_ID=your-client-id
+    AUTH_URI=https://accounts.google.com/o/oauth2/auth
+    TOKEN_URI=https://oauth2.googleapis.com/token
+    AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+    CLIENT_X509_CERT_URL=your-client-x509-cert-url
+    UNIVERSE_DOMAIN=googleapis.com
+
+    # Firebase Database Configuration
+    DATABASE_URL=your-database-url
+
+    # Server Configuration
+    PORT=3001
 ```
 
 Available Scripts

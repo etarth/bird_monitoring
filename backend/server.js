@@ -1,5 +1,6 @@
 const express = require('express');
 const admin = require('firebase-admin');
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -31,10 +32,28 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware to parse JSON requests
 app.use(express.json());
+app.use(cors()); // Enable CORS for all routes
 
 // Test route to check if the server is running
 app.get('/', (req, res) => {
   res.send('Bird Monitoring System Backend is Running');
+});
+
+// New route to fetch bird history data
+app.get('/api/bird-history', (req, res) => {
+  const birdHistoryRef = db.ref('/birdHistory');
+  birdHistoryRef.once('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      const records = Object.entries(data).map(([key, value]) => ({
+        id: key,
+        ...value,
+      }));
+      res.json(records);
+    } else {
+      res.json([]);
+    }
+  });
 });
 
 // Start the server

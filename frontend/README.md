@@ -30,14 +30,18 @@ Make sure you have the following installed on your machine:
 3. Create a .env file in the root of the frontend directory and add the following environment variables:
 
 ```
-   REACT_APP_API_KEY=your-api-key
-   REACT_APP_AUTH_DOMAIN=your-auth-domain
-   REACT_APP_DATABASE_URL=your-database-url
-   REACT_APP_PROJECT_ID=your-project-id
-   REACT_APP_STORAGE_BUCKET=your-storage-bucket
-   REACT_APP_MESSAGING_SENDER_ID=your-messaging-sender-id
-   REACT_APP_APP_ID=your-app-id
-   REACT_APP_MEASUREMENT_ID=your-measurement-id
+    # Firebase Configuration
+    REACT_APP_API_KEY=your-api-key
+    REACT_APP_AUTH_DOMAIN=your-auth-domain
+    REACT_APP_DATABASE_URL=your-database-url
+    REACT_APP_PROJECT_ID=your-project-id
+    REACT_APP_STORAGE_BUCKET=your-storage-bucket
+    REACT_APP_MESSAGING_SENDER_ID=your-messaging-sender-id
+    REACT_APP_APP_ID=your-app-id
+    REACT_APP_MEASUREMENT_ID=your-measurement-id
+
+    # Backend Configuration
+    REACT_APP_BACKEND_URL=http://localhost:3001
    ```
 
 Available Scripts
