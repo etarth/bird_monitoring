@@ -54,25 +54,25 @@ Make sure you have the following installed on your machine:
 npm start
 ```
 
-This will start the backend server on `http://localhost:3001` and the frontend server on `http://localhost:3000`.
+    This will start the backend server on `http://localhost:3001` and the frontend server on `http://localhost:3000`.
 
 2. Alternatively, you can start both backend and frontend seperately by running the following command in 
 
-Backend 
+    Backend 
 
-```sh
-node server.js
-```
+    ```sh
+    node server.js
+    ```
 
-This will start the backend server on `http://localhost:3001`
+    This will start the backend server on `http://localhost:3001`
 
-Frontend
+    Frontend
 
-```sh
-npm start
-```
+    ```sh
+    npm start
+    ```
 
-This will start the frontend server on `http://localhost:3000`.
+    This will start the frontend server on `http://localhost:3000`.
 
 ## License
 
