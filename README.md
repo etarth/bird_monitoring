@@ -50,9 +50,9 @@ Make sure you have the following installed on your machine:
 
 1. To start both the frontend and backend servers concurrently, run the following command in the root directory:
 
-```sh
-npm start
-```
+    ```
+    npm start
+    ```
 
     This will start the backend server on `http://localhost:3001` and the frontend server on `http://localhost:3000`.
 
