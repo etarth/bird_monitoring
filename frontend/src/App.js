@@ -5,16 +5,17 @@ import SideMenu from './components/SideMenu';
 import BirdStatus from './components/BirdStatus';
 import CameraStream from './components/CameraStream';
 import BirdHistory from './components/BirdHistory';
+import SettingsModal from './components/SettingsModal'; // Import the new modal component
 
 const App = () => {
   const [sensorData, setSensorData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('liveStream');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const liveStreamRef = useRef(null);
   const pettingRef = useRef(null);
   const birdHistoryRef = useRef(null);
-  const changeNameRef = useRef(null);
 
   // Firebase data fetching
   useEffect(() => {
@@ -22,7 +23,7 @@ const App = () => {
 
     onValue(sensorDataRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data from Firebase:", data);
+      console.log('Data from Firebase:', data);
       setSensorData(data);
     });
   }, []);
@@ -30,7 +31,6 @@ const App = () => {
   // Toggle side menu visibility
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    console.log(isOpen);
   };
 
   // Scroll to a specific section
@@ -45,78 +45,50 @@ const App = () => {
       case 'birdHistory':
         birdHistoryRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
-      case 'changeName':
-        changeNameRef.current?.scrollIntoView({ behavior: 'smooth' });
-        break;
       default:
         break;
     }
   };
 
-  // Section selection handler that closes the menu and scrolls
-  const handleSectionSelect = (section) => {
-    setIsOpen(false);
+  // Section selection handler
+  // Section selection handler
+const handleSectionSelect = (section) => {
+  if (section === 'settingsModal') {
+    setIsOpen(false); // Close sidebar
     setTimeout(() => {
-      setSelectedSection(section);
-      scrollToSection(section);
-    },100)
-  };
+      setIsModalOpen(true);
+    }, 100);
+  } else {
+    setIsOpen(false); // Close sidebar
+    setTimeout(() => {
+      setSelectedSection(section); // Update selectedSection
+      scrollToSection(section); // Scroll to the selected section
+    }, 100);
+  }
+};
 
-  // IntersectionObserver to track section visibility
-  useEffect(() => {
-    const sections = [
-      { id: 'liveStream', ref: liveStreamRef },
-      { id: 'feeding', ref: pettingRef },
-      { id: 'birdHistory', ref: birdHistoryRef },
-      { id: 'changeName', ref: changeNameRef },
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const visibleSection = sections.find((section) => section.ref.current === entry.target);
-            if (visibleSection && visibleSection.id !== selectedSection) {
-              setSelectedSection(visibleSection.id);
-            }
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    sections.forEach((section) => {
-      if (section.ref.current) {
-        observer.observe(section.ref.current);
-      }
-    });
-
-    // Cleanup observer on unmount
-    return () => {
-      sections.forEach((section) => {
-        if (section.ref.current) {
-          observer.unobserve(section.ref.current);
-        }
-      });
-    };
-  }, [selectedSection]);
+  
+  // Handle modal save and close actions
+  const handleModalDone = (settings) => {
+    console.log('Saved Settings:', settings);
+    setIsModalOpen(false); // Close modal
+    // The selectedSection remains unchanged
+  };  
 
   return (
-    <div className="flex-col min-h-screen space-y-[24px] bg-[#DBDBDC] pt-[32px] p-6 overflow-hidden">
-        <button
-          onClick={toggleMenu}
-          className="rounded-full transition-transform duration-300"
-        >
-          <span className="text-black text-[32px]">
-            {isOpen ? '×' : '☰'}
-          </span>
-        </button>
+    <div className="flex-col min-h-screen space-y-[24px] bg-[#DBDBDC] p-6 overflow-hidden">
+      <button
+        onClick={toggleMenu}
+        className="rounded-full transition-transform duration-300"
+      >
+        <span className="text-black text-[32px]">
+          {isOpen ? '×' : '☰'}
+        </span>
+      </button>
 
-      <div 
-        className={
-          `flex-row transition-all duration-300 ease-in-out h-[85vh] w-full 
-          ${isOpen ? 'translate-x-[50%]' : 'translate-x-0'}`
-        }
+      <div
+        className={`flex-row transition-all duration-300 ease-in-out h-[85vh] w-full 
+          ${isOpen ? 'translate-x-[50%]' : 'translate-x-0'}`}
       >
         <SideMenu selectedSection={selectedSection} onSelectSection={handleSectionSelect} />
         <div className="flex-col space-y-[24px] h-[85vh] w-full rounded-[36px] overflow-y-auto snap-mandatory snap-y">
@@ -135,6 +107,9 @@ const App = () => {
           </div>
         </div>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleModalDone} />
     </div>
   );
 };

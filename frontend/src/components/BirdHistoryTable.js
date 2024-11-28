@@ -9,12 +9,12 @@ const BirdHistoryTable = ({ birdHistory }) => {
     <div className="flex flex-col h-[55%]"> {/* Make the container flexible */}
       <div className="flex-grow overflow-y-auto"> {/* Allow the table to fill available space */}
         <table className="w-full text-left border-collapse">
-          <thead>
+          <thead className='sticky top-0 bg-white'>
             <tr>
               <th className="border-b-2 p-2">Day</th>
               <th className="border-b-2 p-2">Food (g)</th>
               <th className="border-b-2 p-2">Water (ml)</th>
-              <th className="border-b-2 p-2">Video</th>
+              <th className="border-b-2 p-2"></th>
             </tr>
           </thead>
           <tbody>
