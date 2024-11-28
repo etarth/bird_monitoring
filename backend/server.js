@@ -75,7 +75,7 @@ app.post('/api/sensor-data', async (req, res) => {
   console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Receiving sensor data`);
   try {
     const sensorData = req.body;
-    const sensorDataRef = db.ref('/sensorData');
+    const sensorDataRef = db.ref('/data');
     await sensorDataRef.push(sensorData);
     console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Successfully saved sensor data`);
     res.status(200).send('Sensor data saved successfully');
@@ -88,13 +88,12 @@ app.post('/api/sensor-data', async (req, res) => {
 app.get('/api/sensor-data', async (req, res) => {
   console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Fetching sensor data`);
   try {
-    const sensorDataRef = db.ref('/sensorData').limitToLast(1);
+    const sensorDataRef = db.ref('/data');
     const snapshot = await sensorDataRef.once('value');
     const data = snapshot.val();
     if (data) {
-      const latestData = Object.values(data)[0];
+      res.json(data);
       console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Successfully fetched sensor data`);
-      res.json(latestData);
     } else {
       console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - No sensor data found`);
       res.json({});
