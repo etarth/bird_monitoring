@@ -3,3 +3,5 @@ serviceAccountKey.json
 firebaseConfig.js
 
 /node_modules
+
+.env
