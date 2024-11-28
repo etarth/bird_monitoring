@@ -30,11 +30,26 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
+const formatDate = (date) => {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Bangkok'
+  }).format(date);
+};
+
 app.get('/', (req, res) => {
+  console.log(`[${formatDate(new Date())}] ✔️ GET / - Bird Monitoring System Backend is Running`);
   res.send('Bird Monitoring System Backend is Running');
 });
 
 app.get('/api/bird-history', async (req, res) => {
+  console.log(`[${formatDate(new Date())}] GET /api/bird-history - Fetching bird history data`);
   try {
     const birdHistoryRef = db.ref('/birdHistory');
     const snapshot = await birdHistoryRef.once('value');
@@ -44,41 +59,52 @@ app.get('/api/bird-history', async (req, res) => {
         id: key,
         ...value,
       }));
+      console.log(`[${formatDate(new Date())}] ✔️  GET /api/bird-history - Successfully fetched bird history data`);
       res.json(records);
     } else {
+      console.log(`[${formatDate(new Date())}] ✔️  GET /api/bird-history - No bird history data found`);
       res.json([]);
     }
   } catch (error) {
+    console.error(`[${formatDate(new Date())}] ❌  GET /api/bird-history - Error fetching bird history data:`, error);
     res.status(500).send('Error fetching bird history data');
   }
 });
 
 app.post('/api/sensor-data', async (req, res) => {
+  console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Receiving sensor data`);
   try {
     const sensorData = req.body;
-    const sensorDataRef = db.ref('/data');
+    const sensorDataRef = db.ref('/sensorData');
     await sensorDataRef.push(sensorData);
+    console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Successfully saved sensor data`);
     res.status(200).send('Sensor data saved successfully');
   } catch (error) {
+    console.error(`[${formatDate(new Date())}] ❌  POST /api/sensor-data - Error saving sensor data:`, error);
     res.status(500).send('Error saving sensor data');
   }
 });
 
 app.get('/api/sensor-data', async (req, res) => {
+  console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Fetching sensor data`);
   try {
-    const sensorDataRef = db.ref('/data');
+    const sensorDataRef = db.ref('/sensorData').limitToLast(1);
     const snapshot = await sensorDataRef.once('value');
     const data = snapshot.val();
     if (data) {
-      res.json(data);
+      const latestData = Object.values(data)[0];
+      console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Successfully fetched sensor data`);
+      res.json(latestData);
     } else {
+      console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - No sensor data found`);
       res.json({});
     }
   } catch (error) {
+    console.error(`[${formatDate(new Date())}] ❌  GET /api/sensor-data - Error fetching sensor data:`, error);
     res.status(500).send('Error fetching sensor data');
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
 });

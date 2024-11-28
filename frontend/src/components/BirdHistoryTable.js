@@ -2,12 +2,24 @@ import React from 'react';
 import { FaVideo } from 'react-icons/fa';
 
 const BirdHistoryTable = ({ birdHistory }) => {
-  // Sort records by date in descending order (latest date first)
   const sortedHistory = [...birdHistory].sort((a, b) => new Date(b.time) - new Date(a.time));
 
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Bangkok'
+    }).format(new Date(date));
+  };
+
   return (
-    <div className="flex flex-col h-[55%]"> {/* Make the container flexible */}
-      <div className="flex-grow overflow-y-auto"> {/* Allow the table to fill available space */}
+    <div className="flex flex-col h-[55%]">
+      <div className="flex-grow overflow-y-auto">
         <table className="w-full text-left border-collapse">
           <thead className='sticky top-0 bg-white'>
             <tr>
@@ -20,7 +32,7 @@ const BirdHistoryTable = ({ birdHistory }) => {
           <tbody>
             {sortedHistory.map((record) => (
               <tr key={record.id}>
-                <td className="border-b text-[14px] p-2">{record.time}</td>
+                <td className="border-b text-[14px] p-2">{formatDate(record.time)}</td>
                 <td className="border-b text-[14px] p-2">{record.food}</td>
                 <td className="border-b text-[14px] p-2">{record.water}</td>
                 <td className="border-b p-2">
