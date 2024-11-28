@@ -4,12 +4,14 @@ import BirdStatus from './components/BirdStatus';
 import CameraStream from './components/CameraStream';
 import BirdHistory from './components/BirdHistory';
 import SettingsModal from './components/SettingsModal';
+import Loading from './components/Loading';
 
 const App = () => {
   const [sensorData, setSensorData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('liveStream');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const liveStreamRef = useRef(null);
   const pettingRef = useRef(null);
@@ -27,6 +29,11 @@ const App = () => {
       }
     };
     fetchSensorData();
+
+    // Simulate loading time
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, []);
 
   const toggleMenu = () => {
@@ -71,6 +78,7 @@ const App = () => {
 
   return (
     <div className="flex-col min-h-screen space-y-[24px] bg-[#DBDBDC] p-6 overflow-hidden">
+      {isLoading && <Loading isVisible={isLoading} />}
       <button onClick={toggleMenu} className="rounded-full transition-transform duration-300">
         <span className="text-black text-[32px]">{isOpen ? '×' : '☰'}</span>
       </button>
