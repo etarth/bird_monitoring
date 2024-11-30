@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+/* styles.css */
+.css-selector {
+  background: linear-gradient(149deg, #50cebe, #c67ee1, #f5ae5a);
+  background-size: 600% 600%;
+
+  -webkit-animation: AnimationName 21s ease infinite;
+  -moz-animation: AnimationName 21s ease infinite;
+  animation: AnimationName 21s ease infinite;
+}
+
+@-webkit-keyframes AnimationName {
+  0% { background-position: 49% 0%; }
+  50% { background-position: 52% 100%; }
+  100% { background-position: 49% 0%; }
+}
+
+@-moz-keyframes AnimationName {
+  0% { background-position: 49% 0%; }
+  50% { background-position: 52% 100%; }
+  100% { background-position: 49% 0%; }
+}
+
+@keyframes AnimationName {
+  0% { background-position: 49% 0%; }
+  50% { background-position: 52% 100%; }
+  100% { background-position: 49% 0%; }
+}
+

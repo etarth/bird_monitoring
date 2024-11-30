@@ -5,6 +5,7 @@ import CameraStream from './components/CameraStream';
 import BirdHistory from './components/BirdHistory';
 import SettingsModal from './components/SettingsModal';
 import Loading from './components/Loading';
+import './App.css';
 
 const App = () => {
   const [sensorData, setSensorData] = useState(null);
@@ -125,7 +126,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex-col min-h-screen space-y-[24px] bg-[#DBDBDC] p-6 overflow-hidden">
+    <div className="flex-col min-h-screen space-y-[24px] css-selector p-6 overflow-hidden">
       {isLoading && <Loading isVisible={isLoading} />}
       <button onClick={toggleMenu} className="rounded-full transition-transform duration-300">
         <span className="text-black text-[32px]">{isOpen ? '×' : '☰'}</span>

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import SettingsModal from './SettingsModal'; // Import the modal component
 
 const SideMenu = ({ selectedSection, onSelectSection }) => {
 
   return (
     <>
       {/* Side Menu */}
-      <div className="fixed mt-0 left-0 w-[50%] h-[75vh] transform -translate-x-full">
+      <div className="fixed mt-0 -left-[24px] w-[45%] h-[85vh] p-4 transform -translate-x-full bg-white rounded-[36px]">
         <div className="flex-col h-full space-y-[16px] p-[12px] content-center">
           <div>
             <button
