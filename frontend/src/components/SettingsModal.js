@@ -214,7 +214,7 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             </button>
             <button
               onClick={handleSave}
-              className="w-full px-6 py-2 bg-black text-white font-bold rounded-full hover:bg-blue-600 transition-all"
+              className="w-full px-6 py-2 bg-black text-white font-bold rounded-full transition-all"
             >
               Save
             </button>

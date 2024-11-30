@@ -5,9 +5,9 @@ const BirdStatus = ({ data, settings }) => {
   const imageUrl = settings?.file ? `${process.env.REACT_APP_BACKEND_URL}/${settings.file}` : null;
   
   return (
-    <div className="flex flex-col w-full h-full rounded-[24px] space-y-[4px]">
-      <div className="flex flex-col items-center bg-white space-y-[8px] w-full h-full rounded-[36px] p-[8px]">
-        <div className='bg-[#DBDBDC] rounded-[32px] w-full h-full flex items-center justify-center'>
+    <div className="flex flex-col w-full h-full rounded-[36px] space-y-[4px]">
+      <div className="flex flex-col items-center bg-white space-y-[8px] w-full h-[55%] rounded-[36px] p-[8px]">
+        <div className='bg-[#DBDBDC] rounded-[32px] w-full h-full flex items-center justify-center h-[85%]'>
           {imageUrl && (
             <img
               src={imageUrl}

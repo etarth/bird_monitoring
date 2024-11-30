@@ -87,10 +87,10 @@ const BirdHistory = () => {
 
       <div className="mb-10 h-[30%]">
         <div className="flex space-x-4 mb-4">
-          <button onClick={() => setActiveTab('food')} className={`py-2 px-4 rounded-lg ${activeTab === 'food' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}>
+          <button onClick={() => setActiveTab('food')} className={`py-2 px-6 rounded-full ${activeTab === 'food' ? 'bg-[#000000] text-white' : 'hover:bg-[#F7F7F7]'}`}>
             Food
           </button>
-          <button onClick={() => setActiveTab('water')} className={`py-2 px-4 rounded-lg ${activeTab === 'water' ? 'bg-[#DBDBDC]' : 'hover:bg-[#F7F7F7]'}`}>
+          <button onClick={() => setActiveTab('water')} className={`py-2 px-6 rounded-full ${activeTab === 'water' ? 'bg-[#000000] text-white' : 'hover:bg-[#F7F7F7]'}`}>
             Water
           </button>
         </div>
