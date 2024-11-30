@@ -134,14 +134,18 @@ app.post('/api/settings', upload.single('file'), async (req, res) => {
     const snapshot = await settingsRef.once('value');
     const currentSettings = snapshot.val() || {};
 
-    const settingsData = { ...currentSettings, ...req.body }; // Merge current settings with new settings
+    const settingsData = { ...currentSettings, ...req.body };
     if (req.file) {
       settingsData.file = req.file.path;
+    } else {
+      settingsData.file = currentSettings.file;
     }
-
     await settingsRef.set(settingsData);
     console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Successfully saved settings data`);
-    res.status(200).send('Settings data saved successfully');
+
+    const updatedSnapshot = await settingsRef.once('value');
+    const updatedData = updatedSnapshot.val();
+    res.status(200).json(updatedData);
   } catch (error) {
     console.error(`[${formatDate(new Date())}] ❌ POST /api/settings - Error saving settings data:`, error);
     res.status(500).send('Error saving settings data');
