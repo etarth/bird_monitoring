@@ -18,11 +18,11 @@ const StatusItem = ({ iconSrc, title, value, type, unit }) => {
         <p className="text-lg text-[#969696]">{value} {unit}</p>
       </div>
       {/* Conditionally render the button if buttonLabel exists */}
-      {buttonLabel && (
+      {/* {buttonLabel && (
         <button className={`h-[48px] w-[100px] bg-black text-white rounded-full px-4 py-2`}>
           {buttonLabel}
         </button>
-      )}
+      )} */}
     </div>
   );
 };

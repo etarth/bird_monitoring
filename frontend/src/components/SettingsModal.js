@@ -42,13 +42,13 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
     if (file) {
       formData.append('file', file);
     }
-
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`, {
         method: 'POST',
         body: formData,
       });
-
+  
       if (response.ok) {
         console.log('Settings data saved successfully');
         onSave({

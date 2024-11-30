@@ -89,6 +89,20 @@ const App = () => {
   const handleModalDone = (settings) => {
     console.log('Saved Settings:', settings);
     setSettingsData(settings);
+
+    const fetchSettingsData = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/settings`);
+        const data = await response.json();
+        setSettingsData(data);
+      } catch (error) {
+        console.error('Error fetching settings data:', error);
+      }
+    };
+
+    fetchSettingsData();
+
     setIsModalOpen(false);
   };
 
@@ -107,7 +121,7 @@ const App = () => {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     );
 
     sections.forEach((section) => {
@@ -129,7 +143,7 @@ const App = () => {
     <div className="flex-col min-h-screen space-y-[24px] css-selector p-6 overflow-hidden">
       {isLoading && <Loading isVisible={isLoading} />}
       <button onClick={toggleMenu} className="rounded-full transition-transform duration-300">
-        <span className="text-black text-[32px]">{isOpen ? '×' : '☰'}</span>
+        <span className="text-white text-[32px]">{isOpen ? '×' : '☰'}</span>
       </button>
 
       <div className={`flex-row transition-all duration-300 ease-in-out h-[85vh] w-full ${isOpen ? 'translate-x-[50%]' : 'translate-x-0'}`}>

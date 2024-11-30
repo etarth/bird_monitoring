@@ -147,6 +147,10 @@ app.post('/api/settings', upload.single('file'), async (req, res) => {
     } else {
       settingsData.file = currentSettings.file;
     }
+
+    settingsData.temperatureRange = JSON.parse(req.body.temperatureRange.replace(/\\/g, ''));
+    settingsData.humidityRange = JSON.parse(req.body.humidityRange.replace(/\\/g, ''));
+
     await settingsRef.set(settingsData);
     console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Successfully saved settings data`);
 
