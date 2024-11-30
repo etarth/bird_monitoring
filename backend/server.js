@@ -1,6 +1,9 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const serviceAccount = {
@@ -30,6 +33,9 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const formatDate = (date) => {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -42,6 +48,23 @@ const formatDate = (date) => {
     timeZone: 'America/New_York'
   }).format(date);
 };
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
 
 app.get('/', (req, res) => {
   console.log(`[${formatDate(new Date())}] ✔️ GET / - Bird Monitoring System Backend is Running`);
@@ -104,11 +127,18 @@ app.get('/api/sensor-data', async (req, res) => {
   }
 });
 
-app.post('/api/settings', async (req, res) => {
+app.post('/api/settings', upload.single('file'), async (req, res) => {
   console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Receiving settings data`);
   try {
-    const settingsData = req.body;
     const settingsRef = db.ref('/settings');
+    const snapshot = await settingsRef.once('value');
+    const currentSettings = snapshot.val() || {};
+
+    const settingsData = { ...currentSettings, ...req.body }; // Merge current settings with new settings
+    if (req.file) {
+      settingsData.file = req.file.path;
+    }
+
     await settingsRef.set(settingsData);
     console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Successfully saved settings data`);
     res.status(200).send('Settings data saved successfully');

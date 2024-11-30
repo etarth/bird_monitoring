@@ -33,27 +33,32 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSave = async () => {
-    const settings = {
-      birdName,
-      foodWeight,
-      waterLevel,
-      temperatureRange,
-      humidityRange,
-      file,
-    };
+    const formData = new FormData();
+    formData.append('birdName', birdName);
+    formData.append('foodWeight', foodWeight);
+    formData.append('waterLevel', waterLevel);
+    formData.append('temperatureRange', JSON.stringify(temperatureRange));
+    formData.append('humidityRange', JSON.stringify(humidityRange));
+    if (file) {
+      formData.append('file', file);
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(settings),
+        body: formData,
       });
 
       if (response.ok) {
         console.log('Settings data saved successfully');
-        onSave(settings);
+        onSave({
+          birdName,
+          foodWeight,
+          waterLevel,
+          temperatureRange,
+          humidityRange,
+          file: file ? file.name : null,
+        });
       } else {
         console.error('Error saving settings data');
       }
@@ -67,6 +72,7 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
   useEffect(() => {
     let timeout;
     if (isOpen) {
+      // Fetch settings data when the modal opens
       const fetchSettings = async () => {
         try {
           const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`);
@@ -83,10 +89,12 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
       };
       fetchSettings();
 
+      // Delay adding the background until the transition ends
       timeout = setTimeout(() => {
         setShowBackground(true);
-      }, 300);
+      }, 300); // Match the duration of your transition (300ms)
     } else {
+      // Immediately remove background when closing
       setShowBackground(false);
     }
     return () => clearTimeout(timeout);

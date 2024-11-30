@@ -8,6 +8,7 @@ import Loading from './components/Loading';
 
 const App = () => {
   const [sensorData, setSensorData] = useState(null);
+  const [settingsData, setSettingsData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('liveStream');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,20 @@ const App = () => {
         console.error('Error fetching sensor data:', error);
       }
     };
+
+    const fetchSettingsData = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/settings`);
+        const data = await response.json();
+        setSettingsData(data);
+      } catch (error) {
+        console.error('Error fetching settings data:', error);
+      }
+    };
+
     fetchSensorData();
+    fetchSettingsData();
 
     // Simulate loading time
     setTimeout(() => {
@@ -73,6 +87,7 @@ const App = () => {
 
   const handleModalDone = (settings) => {
     console.log('Saved Settings:', settings);
+    setSettingsData(settings);
     setIsModalOpen(false);
   };
 
@@ -91,7 +106,7 @@ const App = () => {
           </div>
           {sensorData ? (
             <div className="h-[85vh] w-full snap-center" ref={pettingRef}>
-              <BirdStatus data={sensorData} />
+              <BirdStatus data={sensorData} settings={settingsData} />
             </div>
           ) : (
             <p className="text-center text-gray-500">Loading sensor data...</p>

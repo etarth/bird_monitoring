@@ -1,13 +1,23 @@
 import React from 'react';
 import StatusItem from './StatusItem';
 
-const BirdStatus = ({ data }) => {
+const BirdStatus = ({ data, settings }) => {
+  const imageUrl = settings?.file ? `${process.env.REACT_APP_BACKEND_URL}/${settings.file.split('/').pop()}` : null;
+  
   return (
     <div className="flex flex-col w-full h-full rounded-[24px] space-y-[4px]">
       <div className="flex flex-col items-center bg-white space-y-[8px] w-full h-full rounded-[36px] p-[8px]">
-        <div className='bg-[#DBDBDC] rounded-[30px] w-full h-full'></div>
+        <div className='bg-[#DBDBDC] rounded-[32px] w-full h-full flex items-center justify-center'>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Bird Image"
+              className="w-full h-full object-cover rounded-[32px]"
+            />
+          )}
+        </div>
         <div className='w-full p-[16px] '>
-          <p className='text-[24px] font-semibold'>Hi👋, My name is Elvis</p>
+          <p className='text-[24px] font-semibold'>Hi👋, My name is {settings?.birdName || 'Elvis'}</p>
         </div>
       </div>
 
