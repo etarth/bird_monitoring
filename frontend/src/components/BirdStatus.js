@@ -2,7 +2,7 @@ import React from 'react';
 import StatusItem from './StatusItem';
 
 const BirdStatus = ({ data, settings }) => {
-  const imageUrl = settings?.file ? `${process.env.REACT_APP_BACKEND_URL}/${settings.file.split('/').pop()}` : null;
+  const imageUrl = settings?.file ? `${process.env.REACT_APP_BACKEND_URL}/${settings.file}` : null;
   
   return (
     <div className="flex flex-col w-full h-full rounded-[24px] space-y-[4px]">
