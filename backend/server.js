@@ -39,7 +39,7 @@ const formatDate = (date) => {
     minute: '2-digit',
     second: '2-digit',
     hour12: false,
-    timeZone: 'Asia/Bangkok'
+    timeZone: 'America/New_York'
   }).format(date);
 };
 
@@ -59,48 +59,81 @@ app.get('/api/bird-history', async (req, res) => {
         id: key,
         ...value,
       }));
-      console.log(`[${formatDate(new Date())}] ✔️  GET /api/bird-history - Successfully fetched bird history data`);
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/bird-history - Successfully fetched bird history data`);
       res.json(records);
     } else {
-      console.log(`[${formatDate(new Date())}] ✔️  GET /api/bird-history - No bird history data found`);
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/bird-history - No bird history data found`);
       res.json([]);
     }
   } catch (error) {
-    console.error(`[${formatDate(new Date())}] ❌  GET /api/bird-history - Error fetching bird history data:`, error);
+    console.error(`[${formatDate(new Date())}] ❌ GET /api/bird-history - Error fetching bird history data:`, error);
     res.status(500).send('Error fetching bird history data');
   }
 });
 
 app.post('/api/sensor-data', async (req, res) => {
-  console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Receiving sensor data`);
+  console.log(`[${formatDate(new Date())}] ✔️ POST /api/sensor-data - Receiving sensor data`);
   try {
     const sensorData = req.body;
     const sensorDataRef = db.ref('/data');
     await sensorDataRef.push(sensorData);
-    console.log(`[${formatDate(new Date())}] ✔️  POST /api/sensor-data - Successfully saved sensor data`);
+    console.log(`[${formatDate(new Date())}] ✔️ POST /api/sensor-data - Successfully saved sensor data`);
     res.status(200).send('Sensor data saved successfully');
   } catch (error) {
-    console.error(`[${formatDate(new Date())}] ❌  POST /api/sensor-data - Error saving sensor data:`, error);
+    console.error(`[${formatDate(new Date())}] ❌ POST /api/sensor-data - Error saving sensor data:`, error);
     res.status(500).send('Error saving sensor data');
   }
 });
 
 app.get('/api/sensor-data', async (req, res) => {
-  console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Fetching sensor data`);
+  console.log(`[${formatDate(new Date())}] ✔️ GET /api/sensor-data - Fetching sensor data`);
   try {
     const sensorDataRef = db.ref('/data');
     const snapshot = await sensorDataRef.once('value');
     const data = snapshot.val();
     if (data) {
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/sensor-data - Successfully fetched sensor data`);
       res.json(data);
-      console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - Successfully fetched sensor data`);
     } else {
-      console.log(`[${formatDate(new Date())}] ✔️  GET /api/sensor-data - No sensor data found`);
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/sensor-data - No sensor data found`);
       res.json({});
     }
   } catch (error) {
-    console.error(`[${formatDate(new Date())}] ❌  GET /api/sensor-data - Error fetching sensor data:`, error);
+    console.error(`[${formatDate(new Date())}] ❌ GET /api/sensor-data - Error fetching sensor data:`, error);
     res.status(500).send('Error fetching sensor data');
+  }
+});
+
+app.post('/api/settings', async (req, res) => {
+  console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Receiving settings data`);
+  try {
+    const settingsData = req.body;
+    const settingsRef = db.ref('/settings');
+    await settingsRef.set(settingsData);
+    console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Successfully saved settings data`);
+    res.status(200).send('Settings data saved successfully');
+  } catch (error) {
+    console.error(`[${formatDate(new Date())}] ❌ POST /api/settings - Error saving settings data:`, error);
+    res.status(500).send('Error saving settings data');
+  }
+});
+
+app.get('/api/settings', async (req, res) => {
+  console.log(`[${formatDate(new Date())}] ✔️ GET /api/settings - Fetching settings data`);
+  try {
+    const settingsRef = db.ref('/settings');
+    const snapshot = await settingsRef.once('value');
+    const data = snapshot.val();
+    if (data) {
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/settings - Successfully fetched settings data`);
+      res.json(data);
+    } else {
+      console.log(`[${formatDate(new Date())}] ✔️ GET /api/settings - No settings data found`);
+      res.json({});
+    }
+  } catch (error) {
+    console.error(`[${formatDate(new Date())}] ❌ GET /api/settings - Error fetching settings data:`, error);
+    res.status(500).send('Error fetching settings data');
   }
 });
 

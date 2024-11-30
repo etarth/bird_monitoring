@@ -32,7 +32,7 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
     setFile(e.target.files[0]);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const settings = {
       birdName,
       foodWeight,
@@ -41,7 +41,25 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
       humidityRange,
       file,
     };
-    onSave(settings);
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+
+      if (response.ok) {
+        console.log('Settings data saved successfully');
+        onSave(settings);
+      } else {
+        console.error('Error saving settings data');
+      }
+    } catch (error) {
+      console.error('Error saving settings data:', error);
+    }
   };
 
   const [showBackground, setShowBackground] = useState(false);
@@ -49,12 +67,26 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
   useEffect(() => {
     let timeout;
     if (isOpen) {
-      // Delay adding the background until the transition ends
+      const fetchSettings = async () => {
+        try {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`);
+          const data = await response.json();
+          setBirdName(data.birdName || '');
+          setFoodWeight(data.foodWeight || '');
+          setWaterLevel(data.waterLevel || '');
+          setTemperatureRange(data.temperatureRange || { min: 20, max: 30 });
+          setHumidityRange(data.humidityRange || { min: 40, max: 60 });
+          setFile(null); // Reset file input
+        } catch (error) {
+          console.error('Error fetching settings data:', error);
+        }
+      };
+      fetchSettings();
+
       timeout = setTimeout(() => {
         setShowBackground(true);
-      }, 300); // Match the duration of your transition (300ms)
+      }, 300);
     } else {
-      // Immediately remove background when closing
       setShowBackground(false);
     }
     return () => clearTimeout(timeout);
@@ -70,7 +102,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
         <div className="bg-white rounded-[36px] p-[24px] w-[90%] md:w-[60%] lg:w-[40%] shadow-xl transform transition-all">
           <h2 className="text-xl font-semibold text-center mb-6">Settings</h2>
 
-          {/* Bird Name */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">Bird Name</label>
             <input
@@ -82,7 +113,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             />
           </div>
 
-          {/* Upload Bird Photo */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">Upload Bird Photo</label>
             <div className="border-2 border-dashed border-gray-300 p-6 text-center rounded-md">
@@ -103,7 +133,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             )}
           </div>
 
-          {/* Max Weight of Food */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">Max Weight of Food (grams)</label>
             <input
@@ -115,7 +144,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             />
           </div>
 
-          {/* Max Level of Water */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">Max Level of Water (ml)</label>
             <input
@@ -127,7 +155,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             />
           </div>
 
-          {/* Preferred Temperature */}
           <div className="mb-6 flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-2">Preferred Temperature (°C)</label>
             <div className="flex flex-row items-center space-x-[12px]">
@@ -149,8 +176,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             </div>
           </div>
 
-
-          {/* Preferred Humidity */}
           <div className="mb-6 flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-2">Preferred Humidity (%)</label>
             <div className='flex flex-row items-center space-x-[12px]'>
@@ -172,7 +197,6 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-row justify-end space-x-4">
             <button
               onClick={onClose}
