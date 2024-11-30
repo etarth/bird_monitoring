@@ -64,7 +64,14 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+    fieldSize: 10 * 1024 * 1024,
+    fieldNameSize: 100,
+  }
+});
 
 app.get('/', (req, res) => {
   console.log(`[${formatDate(new Date())}] ✔️ GET / - Bird Monitoring System Backend is Running`);

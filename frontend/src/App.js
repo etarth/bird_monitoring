@@ -91,6 +91,39 @@ const App = () => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    const sections = [
+      { ref: liveStreamRef, name: 'liveStream' },
+      { ref: pettingRef, name: 'feeding' },
+      { ref: birdHistoryRef, name: 'birdHistory' }
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setSelectedSection(entry.target.dataset.section);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    sections.forEach((section) => {
+      if (section.ref.current) {
+        observer.observe(section.ref.current);
+      }
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        if (section.ref.current) {
+          observer.unobserve(section.ref.current);
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className="flex-col min-h-screen space-y-[24px] bg-[#DBDBDC] p-6 overflow-hidden">
       {isLoading && <Loading isVisible={isLoading} />}
@@ -101,17 +134,17 @@ const App = () => {
       <div className={`flex-row transition-all duration-300 ease-in-out h-[85vh] w-full ${isOpen ? 'translate-x-[50%]' : 'translate-x-0'}`}>
         <SideMenu selectedSection={selectedSection} onSelectSection={handleSectionSelect} />
         <div className="flex-col space-y-[24px] h-[85vh] w-full rounded-[36px] overflow-y-auto snap-mandatory snap-y">
-          <div className="h-[85vh] w-full snap-center" ref={liveStreamRef}>
+          <div className="h-[85vh] w-full snap-center" ref={liveStreamRef} data-section="liveStream">
             <CameraStream />
           </div>
           {sensorData ? (
-            <div className="h-[85vh] w-full snap-center" ref={pettingRef}>
+            <div className="h-[85vh] w-full snap-center" ref={pettingRef} data-section="feeding">
               <BirdStatus data={sensorData} settings={settingsData} />
             </div>
           ) : (
             <p className="text-center text-gray-500">Loading sensor data...</p>
           )}
-          <div className="h-[85vh] w-full snap-center" ref={birdHistoryRef}>
+          <div className="h-[85vh] w-full snap-center" ref={birdHistoryRef} data-section="birdHistory">
             <BirdHistory />
           </div>
         </div>
