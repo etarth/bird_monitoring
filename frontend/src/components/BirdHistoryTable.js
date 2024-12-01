@@ -32,9 +32,9 @@ const BirdHistoryTable = ({ birdHistory }) => {
           <tbody>
             {sortedHistory.map((record) => (
               <tr key={record.id}>
-                <td className="border-b text-[14px] p-2">{formatDate(record.time)}</td>
+                <td className="border-b text-[14px] p-2">{record.timestamp}</td>
                 <td className="border-b text-[14px] p-2">{record.food}</td>
-                <td className="border-b text-[14px] p-2">{record.water}</td>
+                <td className="border-b text-[14px] p-2">{record.waterLevel}</td>
                 <td className="border-b p-2">
                   {record.video ? (
                     <a href={record.video} target="_blank" rel="noopener noreferrer">

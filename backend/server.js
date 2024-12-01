@@ -81,22 +81,19 @@ app.get('/', (req, res) => {
 app.get('/api/bird-history', async (req, res) => {
   console.log(`[${formatDate(new Date())}] GET /api/bird-history - Fetching bird history data`);
   try {
-    const birdHistoryRef = db.ref('/birdHistory');
-    const snapshot = await birdHistoryRef.once('value');
-    const data = snapshot.val();
-    if (data) {
-      const records = Object.entries(data).map(([key, value]) => ({
-        id: key,
-        ...value,
-      }));
+    const response = await fetch(process.env.SHEETDB_API_ENDPOINT);
+    const data1 = await response.json();
+    const data = data1.slice(-20);
+
+    if (data && data.length) {
       console.log(`[${formatDate(new Date())}] ✔️ GET /api/bird-history - Successfully fetched bird history data`);
-      res.json(records);
+      res.json(data);
     } else {
       console.log(`[${formatDate(new Date())}] ✔️ GET /api/bird-history - No bird history data found`);
       res.json([]);
     }
   } catch (error) {
-    console.error(`[${formatDate(new Date())}] ❌ GET /api/bird-history - Error fetching bird history data:`, error);
+    console.error(`[${formatDate(new Date())}] ❌ GET /api/bird-history - Error fetching bird history data:`, error.message);
     res.status(500).send('Error fetching bird history data');
   }
 });
