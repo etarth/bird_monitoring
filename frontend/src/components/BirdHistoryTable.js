@@ -33,7 +33,7 @@ const BirdHistoryTable = ({ birdHistory }) => {
             {sortedHistory.map((record) => (
               <tr key={record.id}>
                 <td className="border-b text-[14px] p-2">{record.timestamp}</td>
-                <td className="border-b text-[14px] p-2">{record.food}</td>
+                <td className="border-b text-[14px] p-2">{record.foodWeight}</td>
                 <td className="border-b text-[14px] p-2">{record.waterLevel}</td>
                 <td className="border-b p-2">
                   {record.video ? (

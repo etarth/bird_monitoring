@@ -4,6 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const functions = require('firebase-functions');
 require('dotenv').config();
 
 const serviceAccount = {
@@ -179,6 +180,8 @@ app.get('/api/settings', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
-});
+// app.listen(PORT, () => {
+//   console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
+// });
+
+exports.api = functions.https.onRequest(app);

@@ -18,8 +18,8 @@ const BirdHistory = () => {
         const response = await fetch(`${backendUrl}/api/bird-history`);
         const data = await response.json();
         const records = data.sort((a, b) => new Date(a.time) - new Date(b.time));
-        console.log('kuy pun')
-        console.log(records)
+        // console.log('kuy pun')
+        // console.log(records)
         setBirdHistory(records);
         setVideoUrl(records[records.length - 1]?.video || '');
       } catch (error) {
@@ -34,7 +34,7 @@ const BirdHistory = () => {
     datasets: [
       {
         label: 'Food Weight (grams)',
-        data: birdHistory.map((record) => record.food),
+        data: birdHistory.map((record) => record.foodWeight),
         fill: false,
         borderColor: 'rgba(75,192,192,1)',
         tension: 0.1,
