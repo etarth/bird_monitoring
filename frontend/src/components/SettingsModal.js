@@ -43,6 +43,15 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
       formData.append('file', file);
     }
   
+    console.log('Sending data:', {
+      birdName,
+      foodWeight,
+      waterLevel,
+      temperatureRange,
+      humidityRange,
+      file: file ? file.name : null,
+    });
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`, {
         method: 'POST',

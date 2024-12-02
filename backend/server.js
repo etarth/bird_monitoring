@@ -180,25 +180,21 @@ app.get('/api/settings', async (req, res) => {
   }
 });
 
-// app.listen(PORT, () => {
-//   console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
-// });
-
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 
 const sendNotificationEmail = async (subject, message) => {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', // Or your email provider
+    service: 'Gmail', 
     auth: {
-      user: process.env.EMAIL_USER, // Your email
-      pass: process.env.EMAIL_PASS, // Your email password or app password
+      user: process.env.EMAIL_USER, 
+      pass: process.env.EMAIL_PASS, 
     },
   });
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: process.env.NOTIFICATION_EMAIL, // The recipient email
+    to: process.env.NOTIFICATION_EMAIL, 
     subject,
     text: message,
   };
@@ -216,7 +212,6 @@ const monitorThresholds = async () => {
   console.log(`[${new Date().toISOString()}] Monitoring thresholds...`);
 
   try {
-    // Fetch `data` and `settings` from Firebase
     const dataRef = db.ref('/data');
     const settingsRef = db.ref('/settings');
 
@@ -228,7 +223,6 @@ const monitorThresholds = async () => {
     const data = dataSnapshot.val();
     const settings = settingsSnapshot.val();
 
-    // Check temperature
     if (data.temperature < settings.temperatureRange.min || data.temperature > settings.temperatureRange.max) {
       await sendNotificationEmail(
         'Temperature Alert',
@@ -236,7 +230,6 @@ const monitorThresholds = async () => {
       );
     }
 
-    // Check humidity
     if (data.humidity < settings.humidityRange.min || data.humidity > settings.humidityRange.max) {
       await sendNotificationEmail(
         'Humidity Alert',
@@ -244,12 +237,15 @@ const monitorThresholds = async () => {
       );
     }
 
-    // Add more checks for water level, food weight, etc., if necessary
   } catch (error) {
     console.error('❌ Error monitoring thresholds:', error);
   }
 };
 
 cron.schedule('*/5 * * * *', monitorThresholds); // Runs every 5 minutes
+
+// app.listen(PORT, () => {
+//   console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
+// });
 
 exports.api = functions.https.onRequest(app);
