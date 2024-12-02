@@ -56,7 +56,11 @@ const SettingsModal = ({ isOpen, onClose, onSave }) => {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/settings`, {
         method: 'POST',
         body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
       });
+      console.log(response);
   
       if (response.ok) {
         console.log('Settings data saved successfully');

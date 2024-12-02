@@ -1,4 +1,6 @@
 const express = require('express');
+const fileParser = require('express-multipart-file-parser')
+const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const multer = require('multer');
@@ -31,8 +33,10 @@ const db = admin.database();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(fileParser)
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Serve static files from the "uploads" directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -56,14 +60,15 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'uploads/');
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   }
+// });
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -133,7 +138,7 @@ app.get('/api/sensor-data', async (req, res) => {
 });
 
 app.post('/api/settings', upload.single('file'), async (req, res) => {
-  console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Receiving settings data`);
+  console.log(`[${new Date().toISOString()}] ✔️ POST /api/settings - Receiving settings data`);
   try {
     const settingsRef = db.ref('/settings');
     const snapshot = await settingsRef.once('value');
@@ -141,7 +146,7 @@ app.post('/api/settings', upload.single('file'), async (req, res) => {
 
     const settingsData = { ...currentSettings, ...req.body };
     if (req.file) {
-      settingsData.file = req.file.path;
+      settingsData.file = req.file.buffer.toString('base64');
     } else {
       settingsData.file = currentSettings.file;
     }
@@ -150,13 +155,13 @@ app.post('/api/settings', upload.single('file'), async (req, res) => {
     settingsData.humidityRange = JSON.parse(req.body.humidityRange.replace(/\\/g, ''));
 
     await settingsRef.set(settingsData);
-    console.log(`[${formatDate(new Date())}] ✔️ POST /api/settings - Successfully saved settings data`);
+    console.log(`[${new Date().toISOString()}] ✔️ POST /api/settings - Successfully saved settings data`);
 
     const updatedSnapshot = await settingsRef.once('value');
     const updatedData = updatedSnapshot.val();
     res.status(200).json(updatedData);
   } catch (error) {
-    console.error(`[${formatDate(new Date())}] ❌ POST /api/settings - Error saving settings data:`, error);
+    console.error(`[${new Date().toISOString()}] ❌ POST /api/settings - Error saving settings data:`, error);
     res.status(500).send('Error saving settings data');
   }
 });
