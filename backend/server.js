@@ -48,7 +48,7 @@ const formatDate = (date) => {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
+    second: '2-digit',   
     hour12: false,
     timeZone: 'America/New_York'
   }).format(date);
@@ -247,7 +247,7 @@ const monitorThresholds = async () => {
   }
 };
 
-cron.schedule('*/5 * * * *', monitorThresholds); // Runs every 5 minutes
+cron.schedule('0 * * * *', monitorThresholds);
 
 // app.listen(PORT, () => {
 //   console.log(`🚀 [${formatDate(new Date())}] Server is running on http://localhost:${PORT} 🚀`);
